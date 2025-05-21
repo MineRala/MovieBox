@@ -9,6 +9,21 @@ import Foundation
 
 enum AppString {
 
+    // UI
+    static let movies = "Movies"
+    static let back = "Back"
+    static let navigateToHome = "Back To Home"
+    static let genre = "Genre"
+    static let actors = "Actors"
+    static let runtime = "Runtime"
+    static let director = "Director"
+    static let loading = "Loading..."
+    static let error = "Error:"
+    static let moreDetails = "More Details"
+
+    // Logic
+    static let NA = "N/A"
+
     // Errors
     static let invalidURL = "Invalid URL"
     static let invalidResponse = "Invalid Response"

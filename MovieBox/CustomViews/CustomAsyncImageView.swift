@@ -14,7 +14,7 @@ struct AsyncMovieImageView: View {
     let cornerRadius: CGFloat
 
     var body: some View {
-        if let url = URL(string: urlString), urlString != "N/A" {
+        if let url = URL(string: urlString), urlString != AppString.NA {
             AsyncImage(url: url) { phase in
                 switch phase {
                 case .empty:
