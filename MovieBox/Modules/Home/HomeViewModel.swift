@@ -14,32 +14,27 @@ final class HomeViewModel: ObservableObject {
 
     private let networkManager: NetworkClient
 
-    init(networkManager: NetworkClient = NetworkManager()) {
+    init(networkManager: NetworkClient) {
         self.networkManager = networkManager
     }
 
     func fetchMovies() async {
-        Task {
+        await MainActor.run {
+            self.isLoading = true
+            self.errorMessage = nil
+        }
+
+        do {
+            let result: MovieResult = try await networkManager.fetch(endpoint: .getMovies)
             await MainActor.run {
-                self.isLoading = true
-                self.errorMessage = nil
+                self.movies = result.search
+                self.isLoading = false
             }
-
-            do {
-                let result: MovieResult = try await networkManager.fetch(endpoint: .getMovies)
-
-                await MainActor.run {
-                    self.movies = result.search
-                    self.isLoading = false
-                }
-            } catch {
-                await MainActor.run {
-                    self.errorMessage = error.localizedDescription
-                    self.isLoading = false
-                }
+        } catch {
+            await MainActor.run {
+                self.errorMessage = error.localizedDescription
+                self.isLoading = false
             }
         }
     }
-
 }
-

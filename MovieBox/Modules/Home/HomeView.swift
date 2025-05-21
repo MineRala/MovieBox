@@ -8,35 +8,42 @@
 import SwiftUI
 
 struct HomeView: View {
-    @StateObject private var viewModel = HomeViewModel()
+    @StateObject private var viewModel: HomeViewModel
+    @State private var path = [String]()
+    private let networkManager: NetworkClient
+
+    init(viewModel: HomeViewModel, networkManager: NetworkClient) {
+         _viewModel = StateObject(wrappedValue: viewModel)
+         self.networkManager = networkManager
+     }
 
     var body: some View {
-        NavigationView {
+        NavigationStack(path: $path) {
             Group {
                 if viewModel.isLoading {
-                    ProgressView("Loading...")
+                    ProgressView(AppString.loading)
                 } else if let error = viewModel.errorMessage {
-                    Text("Error: \(error)")
+                    Text("\(AppString.error) \(error)")
                         .foregroundColor(.red)
                         .multilineTextAlignment(.center)
                         .padding()
                 } else {
                     List(viewModel.movies, id: \.imdbID) { movie in
-                        ZStack {
-                            NavigationLink(destination: DetailView(imdbID: movie.imdbID)) {
-                                EmptyView()
-                            }
-                            .opacity(0)
+                        Button {
+                            path.append(movie.imdbID)
+                        } label: {
                             MovieCardView(movie: movie)
                         }
                         .listRowSeparator(.hidden)
                         .listRowBackground(Color.clear)
                     }
                     .listStyle(.plain)
-
                 }
             }
-            .navigationTitle("Movies")
+            .navigationTitle(AppString.movies)
+            .navigationDestination(for: String.self) { imdbID in
+                DetailView(viewModel: DetailViewModel(imdbID: imdbID, networkManager: networkManager), path: $path)
+            }
         }
         .task {
             await viewModel.fetchMovies()

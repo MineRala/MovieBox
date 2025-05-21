@@ -7,7 +7,6 @@
 
 import Foundation
 
-@MainActor
 final class DetailViewModel: ObservableObject {
     @Published var movieDetail: MovieDetailModel?
     @Published var isLoading = false
@@ -16,7 +15,7 @@ final class DetailViewModel: ObservableObject {
     private let networkManager: NetworkClient
     private let imdbID: String
 
-    init(imdbID: String, networkManager: NetworkClient = NetworkManager()) {
+    init(imdbID: String, networkManager: NetworkClient) {
         self.imdbID = imdbID
         self.networkManager = networkManager
         Task {
@@ -25,14 +24,22 @@ final class DetailViewModel: ObservableObject {
     }
 
     func fetchMovieDetail() async {
-        isLoading = true
-        errorMessage = nil
+        await MainActor.run {
+            isLoading = true
+            errorMessage = nil
+        }
         do {
             let result: MovieDetailModel = try await networkManager.fetch(endpoint: .getMovieDetail(movieIMBID: imdbID))
-            movieDetail = result
+            await MainActor.run {
+                movieDetail = result
+                isLoading = false
+            }
         } catch {
-            errorMessage = error.localizedDescription
+            await MainActor.run {
+                errorMessage = error.localizedDescription
+                isLoading = false
+            }
         }
-        isLoading = false
     }
+
 }

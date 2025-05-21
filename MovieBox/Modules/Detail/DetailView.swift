@@ -8,25 +8,26 @@
 import SwiftUI
 
 struct DetailView: View {
-    let imdbID: String
-    @StateObject private var viewModel: DetailViewModel
+    @ObservedObject private var viewModel: DetailViewModel
+    @State private var showMoreDetails = false
+    @Binding var path: [String]
 
-    init(imdbID: String) {
-        self.imdbID = imdbID
-        _viewModel = StateObject(wrappedValue: DetailViewModel(imdbID: imdbID))
+    init(viewModel: DetailViewModel, path: Binding<[String]>) {
+        self.viewModel = viewModel
+        self._path = path
     }
 
     var body: some View {
-        if viewModel.isLoading {
-            ProgressView()
-                .padding()
-        } else if let error = viewModel.errorMessage {
-            Text("Error: \(error)")
-                .foregroundColor(.red)
-                .multilineTextAlignment(.center)
-                .padding()
-        } else if let movieDetail = viewModel.movieDetail {
-            VStack(spacing: 8) {
+        VStack(spacing: 8) {
+            if viewModel.isLoading {
+                ProgressView()
+                    .padding()
+            } else if let error = viewModel.errorMessage {
+                Text("\(AppString.error) \(error)")
+                    .foregroundColor(.red)
+                    .multilineTextAlignment(.center)
+                    .padding()
+            } else if let movieDetail = viewModel.movieDetail {
                 AsyncMovieImageView(
                     urlString: movieDetail.poster,
                     width: 150,
@@ -49,19 +50,27 @@ struct DetailView: View {
                     .padding(.top, 8)
                     .padding(.horizontal, 8)
 
-                Button(action: {
-                    // Action
-                }) {
-                    Text("More Details")
+                Button {
+                    showMoreDetails = true
+                } label: {
+                    Text(AppString.moreDetails)
                         .bold()
                         .foregroundColor(.blue)
                 }
                 .padding(.top, 8)
+            } else {
+                Text(AppString.loading)
             }
-            .frame(maxHeight: .infinity, alignment: .top)
-            .padding()
-        } else {
-            Text("Loading...")
+        }
+        .task {
+            await viewModel.fetchMovieDetail()
+        }
+        .frame(maxHeight: .infinity, alignment: .top)
+        .padding()
+        .navigationDestination(isPresented: $showMoreDetails) {
+            if let movieDetail = viewModel.movieDetail {
+                MoreDetailView(viewModel: MoreDetailViewModel(movieDetail: movieDetail),path: $path)
+            }
         }
     }
 }
