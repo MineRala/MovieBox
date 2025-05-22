@@ -44,9 +44,7 @@ struct MoreDetailView: View {
             Text(title)
                 .fontWeight(.semibold)
                 .fixedSize()
-
             Spacer(minLength: 4)
-
             Text(value)
                 .fontWeight(.light)
                 .font(.callout)

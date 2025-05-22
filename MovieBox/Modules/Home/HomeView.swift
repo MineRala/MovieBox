@@ -8,14 +8,13 @@
 import SwiftUI
 
 struct HomeView: View {
-    @StateObject private var viewModel: HomeViewModel
-    @State private var path = [String]()
-    private let networkManager: NetworkClient
+    @StateObject var viewModel: HomeViewModel
+    @Binding var path: [String]
 
-    init(viewModel: HomeViewModel, networkManager: NetworkClient) {
-         _viewModel = StateObject(wrappedValue: viewModel)
-         self.networkManager = networkManager
-     }
+    init(viewModel: HomeViewModel, path: Binding<[String]>) {
+        _viewModel = StateObject(wrappedValue: viewModel)
+        self._path = path
+    }
 
     var body: some View {
         NavigationStack(path: $path) {
@@ -42,7 +41,10 @@ struct HomeView: View {
             }
             .navigationTitle(AppString.movies)
             .navigationDestination(for: String.self) { imdbID in
-                DetailView(viewModel: DetailViewModel(imdbID: imdbID, networkManager: networkManager), path: $path)
+                DetailView(
+                    viewModel: DetailViewModel(imdbID: imdbID, networkManager: viewModel.networkManager),
+                    path: $path
+                )
             }
         }
         .task {

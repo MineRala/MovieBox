@@ -9,11 +9,11 @@ import SwiftUI
 
 @main
 struct MovieBoxApp: App {
-    let networkManager = NetworkManager()
+    @StateObject private var coordinator = MovieCoordinator(networkManager: NetworkManager())
 
     var body: some Scene {
         WindowGroup {
-            HomeView(viewModel: HomeViewModel(networkManager: networkManager), networkManager: networkManager)
+            coordinator.start()
         }
     }
 }

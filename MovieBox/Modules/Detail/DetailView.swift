@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct DetailView: View {
-    @ObservedObject private var viewModel: DetailViewModel
+    @ObservedObject var viewModel: DetailViewModel
     @State private var showMoreDetails = false
     @Binding var path: [String]
 
@@ -20,8 +20,7 @@ struct DetailView: View {
     var body: some View {
         VStack(spacing: 8) {
             if viewModel.isLoading {
-                ProgressView()
-                    .padding()
+                ProgressView().padding()
             } else if let error = viewModel.errorMessage {
                 Text("\(AppString.error) \(error)")
                     .foregroundColor(.red)
@@ -34,22 +33,18 @@ struct DetailView: View {
                     height: 200,
                     cornerRadius: 12
                 )
-
                 Text(movieDetail.title)
                     .font(.title)
                     .fontWeight(.bold)
                     .multilineTextAlignment(.center)
-
                 Text(movieDetail.released)
                     .font(.title3)
                     .fontWeight(.semibold)
-
                 Text(movieDetail.plot)
                     .font(.body)
                     .multilineTextAlignment(.center)
                     .padding(.top, 8)
                     .padding(.horizontal, 8)
-
                 Button {
                     showMoreDetails = true
                 } label: {
@@ -69,7 +64,7 @@ struct DetailView: View {
         .padding()
         .navigationDestination(isPresented: $showMoreDetails) {
             if let movieDetail = viewModel.movieDetail {
-                MoreDetailView(viewModel: MoreDetailViewModel(movieDetail: movieDetail),path: $path)
+                MoreDetailView(viewModel: MoreDetailViewModel(movieDetail: movieDetail), path: $path)
             }
         }
     }
