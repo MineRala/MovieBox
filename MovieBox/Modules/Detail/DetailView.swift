@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftUI
 
 struct DetailView: View {
     @StateObject var viewModel: DetailViewModel
@@ -15,7 +16,7 @@ struct DetailView: View {
             if viewModel.isLoading {
                 ProgressView().padding()
             } else if let error = viewModel.errorMessage {
-                Text("\(AppString.error) \(error)")
+                Text("Error: \(error)")
                     .foregroundColor(.red)
                     .multilineTextAlignment(.center)
                     .padding()
@@ -38,16 +39,17 @@ struct DetailView: View {
                     .multilineTextAlignment(.center)
                     .padding(.top, 8)
                     .padding(.horizontal, 8)
+
                 Button {
                     viewModel.moreDetailsTapped()
                 } label: {
-                    Text(AppString.moreDetails)
+                    Text("More Details")
                         .bold()
                         .foregroundColor(.blue)
                 }
                 .padding(.top, 8)
             } else {
-                Text(AppString.loading)
+                Text("Loading...")
             }
         }
         .frame(maxHeight: .infinity, alignment: .top)

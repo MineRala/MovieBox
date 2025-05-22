@@ -19,19 +19,22 @@ struct HomeView: View {
     var body: some View {
         NavigationStack(path: $path) {
             Group {
-                if viewModel.isLoading {
-                    ProgressView("Loading...")
-                } else if let error = viewModel.errorMessage {
-                    Text("Error: \(error)")
-                        .foregroundColor(.red)
-                        .multilineTextAlignment(.center)
-                        .padding()
+                if viewModel.isLoading || viewModel.errorMessage != nil {
+                    LoadingErrorView(
+                        isLoading: viewModel.isLoading,
+                        errorMessage: viewModel.errorMessage,
+                        retryAction: {
+                            Task {
+                                await viewModel.fetchMovies()
+                            }
+                        }
+                    )
                 } else {
                     List(viewModel.movies, id: \.imdbID) { movie in
                         Button {
                             viewModel.didSelectMovie(imdbID: movie.imdbID)
                         } label: {
-                           MovieCardView(movie: movie)
+                            MovieCardView(movie: movie)
                         }
                     }
                     .listStyle(.plain)
@@ -41,17 +44,27 @@ struct HomeView: View {
             .navigationDestination(for: MovieRoute.self) { route in
                 switch route {
                 case .detail(let imdbID):
-                    DetailView(viewModel: DetailViewModel(imdbID: imdbID, networkManager: viewModel.networkManager, coordinator: viewModel.coordinator))
+                    if let detailCoordinator = viewModel.coordinator.parent?.detailCoordinator {
+                        DetailView(viewModel: DetailViewModel(
+                            imdbID: imdbID,
+                            networkManager: viewModel.networkManager,
+                            coordinator: detailCoordinator
+                        ))
+                    } else {
+                        Text("Navigation Error: Missing coordinator.")
+                            .foregroundColor(.red)
+                    }
                 case .moreDetail:
-                    MoreDetailView(viewModel: MoreDetailViewModel(coordinator: viewModel.coordinator))
+                    if let moreDetailCoordinator = viewModel.coordinator.parent?.moreDetailCoordinator {
+                        MoreDetailView(viewModel: MoreDetailViewModel(
+                            coordinator: moreDetailCoordinator
+                        ))
+                    } else {
+                        Text("Navigation Error: Missing coordinator.")
+                            .foregroundColor(.red)
+                    }
                 }
             }
-            .task {
-                if viewModel.movies.isEmpty {
-                    await viewModel.fetchMovies()
-                }
-            }
-
         }
     }
 }

@@ -13,9 +13,9 @@ final class HomeViewModel: ObservableObject {
     @Published var errorMessage: String?
 
     let networkManager: NetworkClient
-    let coordinator: MovieCoordinator
+    let coordinator: HomeCoordinator
 
-    init(networkManager: NetworkClient, coordinator: MovieCoordinator) {
+    init(networkManager: NetworkClient, coordinator: HomeCoordinator) {
         self.networkManager = networkManager
         self.coordinator = coordinator
     }
@@ -43,3 +43,4 @@ final class HomeViewModel: ObservableObject {
         coordinator.navigateToDetail(imdbID: imdbID)
     }
 }
+

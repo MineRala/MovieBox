@@ -9,12 +9,11 @@ import Foundation
 
 final class MoreDetailViewModel: ObservableObject {
     private let movieDetail: MovieDetailModel?
-    private weak var coordinator: MovieCoordinator?
+    private let coordinator: MoreDetailCoordinator
 
-
-    init(coordinator: MovieCoordinator?) {
+    init(coordinator: MoreDetailCoordinator) {
         self.coordinator = coordinator
-        self.movieDetail = coordinator?.selectedMovieDetail
+        self.movieDetail = coordinator.selectedMovieDetail
     }
 
     var genreText: String { movieDetail?.genre ?? "-" }
@@ -23,10 +22,10 @@ final class MoreDetailViewModel: ObservableObject {
     var directorText: String { movieDetail?.director ?? "-" }
 
     func backTapped() {
-        coordinator?.popLast()
+        coordinator.back()
     }
 
     func backToHomeTapped() {
-        coordinator?.popToRoot()
+        coordinator.backToHome()
     }
 }

@@ -14,9 +14,9 @@ final class DetailViewModel: ObservableObject {
 
     private let networkManager: NetworkClient
     private let imdbID: String
-    private weak var coordinator: MovieCoordinator?
+    private let coordinator: DetailCoordinator
 
-    init(imdbID: String, networkManager: NetworkClient, coordinator: MovieCoordinator?) {
+    init(imdbID: String, networkManager: NetworkClient, coordinator: DetailCoordinator) {
         self.imdbID = imdbID
         self.networkManager = networkManager
         self.coordinator = coordinator
@@ -31,7 +31,7 @@ final class DetailViewModel: ObservableObject {
             let result: MovieDetailModel = try await networkManager.fetch(endpoint: .getMovieDetail(movieIMBID: imdbID))
             await MainActor.run {
                 movieDetail = result
-                self.coordinator?.selectedMovieDetail = result
+                coordinator.parent?.selectedMovieDetail = result
                 isLoading = false
             }
         } catch {
@@ -43,8 +43,6 @@ final class DetailViewModel: ObservableObject {
     }
 
     func moreDetailsTapped() {
-        if let id = movieDetail?.imdbID {
-            coordinator?.navigateToMoreDetail(imdbID: id)
-        }
+        coordinator.navigateToMoreDetail()
     }
 }
