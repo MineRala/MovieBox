@@ -9,9 +9,9 @@ import SwiftUI
 
 struct HomeView: View {
     @StateObject var viewModel: HomeViewModel
-    @Binding var path: [MovieRoute]
+    @Binding var path: [String]
 
-    init(viewModel: HomeViewModel, path: Binding<[MovieRoute]>) {
+    init(viewModel: HomeViewModel, path: Binding<[String]>) {
         _viewModel = StateObject(wrappedValue: viewModel)
         self._path = path
     }
@@ -19,52 +19,36 @@ struct HomeView: View {
     var body: some View {
         NavigationStack(path: $path) {
             Group {
-                if viewModel.isLoading || viewModel.errorMessage != nil {
-                    LoadingErrorView(
-                        isLoading: viewModel.isLoading,
-                        errorMessage: viewModel.errorMessage,
-                        retryAction: {
-                            Task {
-                                await viewModel.fetchMovies()
-                            }
-                        }
-                    )
+                if viewModel.isLoading {
+                    ProgressView(AppString.loading)
+                } else if let error = viewModel.errorMessage {
+                    Text("\(AppString.error) \(error)")
+                        .foregroundColor(.red)
+                        .multilineTextAlignment(.center)
+                        .padding()
                 } else {
                     List(viewModel.movies, id: \.imdbID) { movie in
                         Button {
-                            viewModel.didSelectMovie(imdbID: movie.imdbID)
+                            path.append(movie.imdbID)
                         } label: {
                             MovieCardView(movie: movie)
                         }
+                        .listRowSeparator(.hidden)
+                        .listRowBackground(Color.clear)
                     }
                     .listStyle(.plain)
                 }
             }
-            .navigationTitle("Movies")
-            .navigationDestination(for: MovieRoute.self) { route in
-                switch route {
-                case .detail(let imdbID):
-                    if let detailCoordinator = viewModel.coordinator.parent?.detailCoordinator {
-                        DetailView(viewModel: DetailViewModel(
-                            imdbID: imdbID,
-                            networkManager: viewModel.networkManager,
-                            coordinator: detailCoordinator
-                        ))
-                    } else {
-                        Text("Navigation Error: Missing coordinator.")
-                            .foregroundColor(.red)
-                    }
-                case .moreDetail:
-                    if let moreDetailCoordinator = viewModel.coordinator.parent?.moreDetailCoordinator {
-                        MoreDetailView(viewModel: MoreDetailViewModel(
-                            coordinator: moreDetailCoordinator
-                        ))
-                    } else {
-                        Text("Navigation Error: Missing coordinator.")
-                            .foregroundColor(.red)
-                    }
-                }
+            .navigationTitle(AppString.movies)
+            .navigationDestination(for: String.self) { imdbID in
+                DetailView(
+                    viewModel: DetailViewModel(imdbID: imdbID, networkManager: viewModel.networkManager),
+                    path: $path
+                )
             }
+        }
+        .task {
+            await viewModel.fetchMovies()
         }
     }
 }

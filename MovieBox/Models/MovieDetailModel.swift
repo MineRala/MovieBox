@@ -8,7 +8,6 @@
 import Foundation
 
 struct MovieDetailModel: Codable {
-    let imdbID: String
     let poster: String
     let title: String
     let released: String
@@ -19,7 +18,6 @@ struct MovieDetailModel: Codable {
     let director: String
 
     enum CodingKeys: String, CodingKey {
-        case imdbID
         case poster = "Poster"
         case title = "Title"
         case released = "Released"
