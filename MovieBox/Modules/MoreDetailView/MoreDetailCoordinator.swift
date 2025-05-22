@@ -7,8 +7,15 @@
 
 import SwiftUI
 
-final class MoreDetailCoordinator: ObservableObject {
-    weak var parent: MovieCoordinator?
+protocol MoreDetailCoordinatorProtocol: AnyObject {
+    var selectedMovieDetail: MovieDetailModel? { get }
+
+    func back()
+    func backToHome()
+}
+
+final class MoreDetailCoordinator: ObservableObject, MoreDetailCoordinatorProtocol {
+    public weak var parent: MovieCoordinator?
 
     init(parent: MovieCoordinator) {
         self.parent = parent

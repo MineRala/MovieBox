@@ -7,8 +7,13 @@
 
 import SwiftUI
 
-final class DetailCoordinator: ObservableObject {
-    weak var parent: MovieCoordinator?
+protocol DetailCoordinatorProtocol: AnyObject {
+    func navigateToMoreDetail()
+    func updateSelectedMovieDetail(_ detail: MovieDetailModel)
+}
+
+final class DetailCoordinator: ObservableObject, DetailCoordinatorProtocol {
+    public weak var parent: MovieCoordinator?
 
     init(parent: MovieCoordinator) {
         self.parent = parent
@@ -19,4 +24,7 @@ final class DetailCoordinator: ObservableObject {
         parent.path.append(.moreDetail)
     }
 
+    func updateSelectedMovieDetail(_ detail: MovieDetailModel) {
+          parent?.selectedMovieDetail = detail
+      }
 }

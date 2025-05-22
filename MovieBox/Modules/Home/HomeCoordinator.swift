@@ -7,8 +7,12 @@
 
 import SwiftUI
 
-final class HomeCoordinator: ObservableObject {
-    weak var parent: MovieCoordinator?
+protocol HomeCoordinatorProtocol: AnyObject {
+    func navigateToDetail(imdbID: String)
+}
+
+final class HomeCoordinator: ObservableObject, HomeCoordinatorProtocol {
+    public weak var parent: MovieCoordinator?
 
     init(parent: MovieCoordinator) {
         self.parent = parent

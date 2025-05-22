@@ -6,17 +6,28 @@
 //
 
 import Foundation
+import SwiftUI
 
-final class DetailViewModel: ObservableObject {
+protocol DetailViewModelProtocol: ObservableObject {
+    var movieDetail: MovieDetailModel? { get }
+    var isLoading: Bool { get }
+    var errorMessage: String? { get }
+
+    func fetchMovieDetail() async
+    func moreDetailsTapped()
+}
+
+// MARK: - DetailViewModelProtocol
+final class DetailViewModel: DetailViewModelProtocol {
     @Published var movieDetail: MovieDetailModel?
     @Published var isLoading = false
     @Published var errorMessage: String?
 
     private let networkManager: NetworkClient
     private let imdbID: String
-    private let coordinator: DetailCoordinator
+    private let coordinator: DetailCoordinatorProtocol
 
-    init(imdbID: String, networkManager: NetworkClient, coordinator: DetailCoordinator) {
+    init(imdbID: String, networkManager: NetworkClient, coordinator: DetailCoordinatorProtocol) {
         self.imdbID = imdbID
         self.networkManager = networkManager
         self.coordinator = coordinator
@@ -31,7 +42,7 @@ final class DetailViewModel: ObservableObject {
             let result: MovieDetailModel = try await networkManager.fetch(endpoint: .getMovieDetail(movieIMBID: imdbID))
             await MainActor.run {
                 movieDetail = result
-                coordinator.parent?.selectedMovieDetail = result
+                coordinator.updateSelectedMovieDetail(result)
                 isLoading = false
             }
         } catch {

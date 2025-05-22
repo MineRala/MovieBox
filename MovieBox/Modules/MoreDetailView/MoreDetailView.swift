@@ -5,34 +5,34 @@
 //  Created by Mine Rala on 21.05.2025.
 //
 
-// MoreDetailView.swift
-
 import SwiftUI
 
-import SwiftUI
+struct MoreDetailView<ViewModel: MoreDetailViewModelProtocol>: View {
+    @StateObject private var viewModel: ViewModel
 
-struct MoreDetailView: View {
-    @StateObject var viewModel: MoreDetailViewModel
+    init(viewModel: ViewModel) {
+        _viewModel = StateObject(wrappedValue: viewModel)
+    }
 
     var body: some View {
         VStack(spacing: 0) {
-            rowView(title: "Genre", value: viewModel.genreText)
+            rowView(title: AppString.genre, value: viewModel.genreText)
             Divider()
-            rowView(title: "Runtime", value: viewModel.runtimeText)
+            rowView(title: AppString.runtime, value: viewModel.runtimeText)
             Divider()
-            rowView(title: "Actors", value: viewModel.actorsText)
+            rowView(title: AppString.runtime, value: viewModel.actorsText)
             Divider()
-            rowView(title: "Director", value: viewModel.directorText)
+            rowView(title: AppString.director, value: viewModel.directorText)
 
             Spacer()
 
-            VStack(spacing: 12) {
+            VStack(spacing: 16) {
                 Button(action: { viewModel.backTapped() }) {
-                    Text("Back").frame(maxWidth: .infinity)
+                    Text(AppString.back).frame(maxWidth: .infinity)
                 }
 
                 Button(action: { viewModel.backToHomeTapped() }) {
-                    Text("Navigate to Home").frame(maxWidth: .infinity)
+                    Text(AppString.navigateToHome).frame(maxWidth: .infinity)
                 }
             }
         }

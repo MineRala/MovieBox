@@ -7,11 +7,23 @@
 
 import Foundation
 
-final class MoreDetailViewModel: ObservableObject {
-    private let movieDetail: MovieDetailModel?
-    private let coordinator: MoreDetailCoordinator
+protocol MoreDetailViewModelProtocol: ObservableObject {
+    var genreText: String { get }
+    var runtimeText: String { get }
+    var actorsText: String { get }
+    var directorText: String { get }
 
-    init(coordinator: MoreDetailCoordinator) {
+    func backTapped()
+    func backToHomeTapped()
+}
+
+
+// MARK: - MoreDetailViewModelProtocol
+final class MoreDetailViewModel: MoreDetailViewModelProtocol {
+    private let movieDetail: MovieDetailModel?
+    private let coordinator: MoreDetailCoordinatorProtocol
+
+    init(coordinator: MoreDetailCoordinatorProtocol) {
         self.coordinator = coordinator
         self.movieDetail = coordinator.selectedMovieDetail
     }

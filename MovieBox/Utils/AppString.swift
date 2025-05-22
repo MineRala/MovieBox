@@ -37,4 +37,5 @@ enum AppString {
     static let pageNotFound = "Sorry, the page or resource you requested could not be found. Please check the URL or try again later."
     static let noInternetConnection = "Sorry, there is no internet connection. Please check your internet connection and try again."
     static let unowned = "Unowned Error!"
+    static let navigationError = "Navigation Error: Missing coordinator."
 }

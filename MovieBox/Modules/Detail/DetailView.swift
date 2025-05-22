@@ -6,10 +6,13 @@
 //
 
 import SwiftUI
-import SwiftUI
 
-struct DetailView: View {
-    @StateObject var viewModel: DetailViewModel
+struct DetailView<ViewModel: DetailViewModelProtocol>: View {
+    @StateObject private var viewModel: ViewModel
+
+    init(viewModel: ViewModel) {
+        _viewModel = StateObject(wrappedValue: viewModel)
+    }
 
     var body: some View {
         VStack(spacing: 8) {

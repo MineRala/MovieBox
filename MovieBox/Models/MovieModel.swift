@@ -7,7 +7,7 @@
 
 import Foundation
 
-//MARK: - MovieResult
+// MARK: - MovieResult
 struct MovieResult: Decodable {
     let search: [MovieModel]
 
@@ -16,7 +16,7 @@ struct MovieResult: Decodable {
     }
 }
 
-//MARK: - MovieModel
+// MARK: - MovieModel
 struct MovieModel: Decodable {
     let poster: String
     let title: String

@@ -19,9 +19,9 @@ final class MovieCoordinator: ObservableObject {
 
     let networkManager: NetworkClient
 
-    lazy var homeCoordinator = HomeCoordinator(parent: self)
-    lazy var detailCoordinator = DetailCoordinator(parent: self)
-    lazy var moreDetailCoordinator = MoreDetailCoordinator(parent: self)
+    lazy var homeCoordinator: HomeCoordinatorProtocol = HomeCoordinator(parent: self)
+    lazy var detailCoordinator: DetailCoordinatorProtocol = DetailCoordinator(parent: self)
+    lazy var moreDetailCoordinator: MoreDetailCoordinatorProtocol = MoreDetailCoordinator(parent: self)
 
     init(networkManager: NetworkClient) {
         self.networkManager = networkManager
@@ -33,7 +33,25 @@ final class MovieCoordinator: ObservableObject {
 
     func start() -> some View {
         let homeVM = HomeViewModel(networkManager: networkManager, coordinator: homeCoordinator)
-        return HomeView(viewModel: homeVM, path: pathBinding)
+        return HomeView<HomeViewModel>(
+            viewModel: homeVM,
+            path: pathBinding,
+            coordinator: self
+        )
+    }
+
+    func detailView(for imdbID: String) -> some View {
+        let detailVM = DetailViewModel(
+            imdbID: imdbID,
+            networkManager: networkManager,
+            coordinator: detailCoordinator
+        )
+        return DetailView(viewModel: detailVM)
+    }
+
+    func moreDetailView() -> some View {
+        let moreDetailVM = MoreDetailViewModel(coordinator: moreDetailCoordinator)
+        return MoreDetailView(viewModel: moreDetailVM)
     }
 
     func popToRoot() {

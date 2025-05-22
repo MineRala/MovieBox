@@ -7,15 +7,27 @@
 
 import Foundation
 
-final class HomeViewModel: ObservableObject {
+protocol HomeViewModelProtocol: ObservableObject {
+    var movies: [MovieModel] { get }
+    var isLoading: Bool { get }
+    var errorMessage: String? { get }
+
+    func fetchMovies() async
+    func didSelectMovie(imdbID: String)
+}
+
+// MARK: - HomeViewModelProtocol
+final class HomeViewModel: HomeViewModelProtocol {
     @Published var movies: [MovieModel] = []
     @Published var isLoading = false
     @Published var errorMessage: String?
+    @Published private(set) var navigationRoute: MovieRoute?
+
 
     let networkManager: NetworkClient
-    let coordinator: HomeCoordinator
+    let coordinator: HomeCoordinatorProtocol
 
-    init(networkManager: NetworkClient, coordinator: HomeCoordinator) {
+    init(networkManager: NetworkClient, coordinator: HomeCoordinatorProtocol) {
         self.networkManager = networkManager
         self.coordinator = coordinator
     }
