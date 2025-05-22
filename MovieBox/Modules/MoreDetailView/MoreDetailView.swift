@@ -5,38 +5,39 @@
 //  Created by Mine Rala on 21.05.2025.
 //
 
+// MoreDetailView.swift
+
 import SwiftUI
 
 struct MoreDetailView: View {
-    @ObservedObject var viewModel: MoreDetailViewModel
-    @Binding var path: [String]
-    @Environment(\.dismiss) private var dismiss
+    @StateObject var viewModel: MoreDetailViewModel
 
     var body: some View {
-        VStack(spacing: 0) {
-            rowView(title: AppString.genre, value: viewModel.genreText)
-            Divider()
-            rowView(title: AppString.runtime, value: viewModel.runtimeText)
-            Divider()
-            rowView(title: AppString.actors, value: viewModel.actorsText)
-            Divider()
-            rowView(title: AppString.director, value: viewModel.directorText)
+            VStack(spacing: 0) {
+                rowView(title: AppString.genre, value: viewModel.genreText)
+                Divider()
+                rowView(title: AppString.runtime, value: viewModel.runtimeText)
+                Divider()
+                rowView(title: AppString.actors, value: viewModel.actorsText)
+                Divider()
+                rowView(title: AppString.director, value: viewModel.directorText)
 
-            Spacer()
+                Spacer()
 
-            VStack(spacing: 12) {
-                Button(action: { dismiss() }) {
-                    Text(AppString.back).frame(maxWidth: .infinity)
-                }
-                Button(action: { path.removeAll() }) {
-                    Text(AppString.navigateToHome).frame(maxWidth: .infinity)
+                VStack(spacing: 12) {
+                    Button(action: { viewModel.backTapped() }) {
+                        Text(AppString.back).frame(maxWidth: .infinity)
+                    }
+
+                    Button(action: { viewModel.backToHomeTapped() }) {
+                        Text(AppString.navigateToHome).frame(maxWidth: .infinity)
+                    }
                 }
             }
+            .frame(maxHeight: .infinity, alignment: .top)
+            .padding([.bottom, .leading, .trailing])
+            .background(Color(.systemBackground))
         }
-        .frame(maxHeight: .infinity, alignment: .top)
-        .padding([.bottom, .leading, .trailing])
-        .background(Color(.systemBackground))
-    }
 
     @ViewBuilder
     private func rowView(title: String, value: String) -> some View {

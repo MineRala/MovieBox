@@ -8,31 +8,50 @@
 
 import SwiftUI
 
+enum MovieRoute {
+    case detail(imdbID: String)
+    case moreDetail
+}
+
 final class MovieCoordinator: ObservableObject {
-    @Published var path: [String] = []
+    @Published private(set) var path: [MovieRoute] = []
+    var selectedMovieDetail: MovieDetailModel?
     private let networkManager: NetworkClient
 
     init(networkManager: NetworkClient) {
         self.networkManager = networkManager
     }
 
-    var pathBinding: Binding<[String]> {
-           Binding(
-               get: { self.path },
-               set: { self.path = $0 }
-           )
-       }
-
-    func start() -> some View {
-        let homeVM = HomeViewModel(networkManager: networkManager)
-        return HomeView(viewModel: homeVM, path: pathBinding)
+    var pathBinding: Binding<[MovieRoute]> {
+        Binding(
+            get: { self.path },
+            set: { self.path = $0 }
+        )
     }
 
     func navigateToDetail(imdbID: String) {
-        path.append(imdbID)
+        selectedMovieDetail = nil
+
+        path.append(.detail(imdbID: imdbID))
     }
 
-    func navigateToRoot() {
+    func navigateToMoreDetail(imdbID: String) {
+        path.append(.moreDetail)
+    }
+
+    func popLast() {
+        if !path.isEmpty {
+            path.removeLast()
+        }
+    }
+
+    func popToRoot() {
         path.removeAll()
+    }
+
+    // Start point - initial view
+    func start() -> some View {
+        let homeVM = HomeViewModel(networkManager: networkManager, coordinator: self)
+        return HomeView(viewModel: homeVM, path: pathBinding)
     }
 }

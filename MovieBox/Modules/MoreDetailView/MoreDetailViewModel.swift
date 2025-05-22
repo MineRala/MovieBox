@@ -8,14 +8,25 @@
 import Foundation
 
 final class MoreDetailViewModel: ObservableObject {
-    let movieDetail: MovieDetailModel
+    private let movieDetail: MovieDetailModel?
+    private weak var coordinator: MovieCoordinator?
 
-    init(movieDetail: MovieDetailModel) {
-        self.movieDetail = movieDetail
+
+    init(coordinator: MovieCoordinator?) {
+        self.coordinator = coordinator
+        self.movieDetail = coordinator?.selectedMovieDetail
     }
 
-    var genreText: String { movieDetail.genre }
-    var runtimeText: String { movieDetail.runtime }
-    var actorsText: String { movieDetail.actors }
-    var directorText: String { movieDetail.director }
+    var genreText: String { movieDetail?.genre ?? "-" }
+    var runtimeText: String { movieDetail?.runtime ?? "-" }
+    var actorsText: String { movieDetail?.actors ?? "-" }
+    var directorText: String { movieDetail?.director ?? "-" }
+
+    func backTapped() {
+        coordinator?.popLast()
+    }
+
+    func backToHomeTapped() {
+        coordinator?.popToRoot()
+    }
 }

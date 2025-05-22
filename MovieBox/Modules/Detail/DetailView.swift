@@ -8,14 +8,7 @@
 import SwiftUI
 
 struct DetailView: View {
-    @ObservedObject var viewModel: DetailViewModel
-    @State private var showMoreDetails = false
-    @Binding var path: [String]
-
-    init(viewModel: DetailViewModel, path: Binding<[String]>) {
-        self.viewModel = viewModel
-        self._path = path
-    }
+    @StateObject var viewModel: DetailViewModel
 
     var body: some View {
         VStack(spacing: 8) {
@@ -27,7 +20,7 @@ struct DetailView: View {
                     .multilineTextAlignment(.center)
                     .padding()
             } else if let movieDetail = viewModel.movieDetail {
-                AsyncMovieImageView(
+                CustomAsyncMovieImageView(
                     urlString: movieDetail.poster,
                     width: 150,
                     height: 200,
@@ -46,7 +39,7 @@ struct DetailView: View {
                     .padding(.top, 8)
                     .padding(.horizontal, 8)
                 Button {
-                    showMoreDetails = true
+                    viewModel.moreDetailsTapped()
                 } label: {
                     Text(AppString.moreDetails)
                         .bold()
@@ -57,15 +50,10 @@ struct DetailView: View {
                 Text(AppString.loading)
             }
         }
-        .task {
-            await viewModel.fetchMovieDetail()
-        }
         .frame(maxHeight: .infinity, alignment: .top)
         .padding()
-        .navigationDestination(isPresented: $showMoreDetails) {
-            if let movieDetail = viewModel.movieDetail {
-                MoreDetailView(viewModel: MoreDetailViewModel(movieDetail: movieDetail), path: $path)
-            }
+        .task {
+            await viewModel.fetchMovieDetail()
         }
     }
 }

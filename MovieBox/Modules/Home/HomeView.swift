@@ -9,9 +9,9 @@ import SwiftUI
 
 struct HomeView: View {
     @StateObject var viewModel: HomeViewModel
-    @Binding var path: [String]
+    @Binding var path: [MovieRoute]
 
-    init(viewModel: HomeViewModel, path: Binding<[String]>) {
+    init(viewModel: HomeViewModel, path: Binding<[MovieRoute]>) {
         _viewModel = StateObject(wrappedValue: viewModel)
         self._path = path
     }
@@ -20,35 +20,38 @@ struct HomeView: View {
         NavigationStack(path: $path) {
             Group {
                 if viewModel.isLoading {
-                    ProgressView(AppString.loading)
+                    ProgressView("Loading...")
                 } else if let error = viewModel.errorMessage {
-                    Text("\(AppString.error) \(error)")
+                    Text("Error: \(error)")
                         .foregroundColor(.red)
                         .multilineTextAlignment(.center)
                         .padding()
                 } else {
                     List(viewModel.movies, id: \.imdbID) { movie in
                         Button {
-                            path.append(movie.imdbID)
+                            viewModel.didSelectMovie(imdbID: movie.imdbID)
                         } label: {
-                            MovieCardView(movie: movie)
+                           MovieCardView(movie: movie)
                         }
-                        .listRowSeparator(.hidden)
-                        .listRowBackground(Color.clear)
                     }
                     .listStyle(.plain)
                 }
             }
-            .navigationTitle(AppString.movies)
-            .navigationDestination(for: String.self) { imdbID in
-                DetailView(
-                    viewModel: DetailViewModel(imdbID: imdbID, networkManager: viewModel.networkManager),
-                    path: $path
-                )
+            .navigationTitle("Movies")
+            .navigationDestination(for: MovieRoute.self) { route in
+                switch route {
+                case .detail(let imdbID):
+                    DetailView(viewModel: DetailViewModel(imdbID: imdbID, networkManager: viewModel.networkManager, coordinator: viewModel.coordinator))
+                case .moreDetail:
+                    MoreDetailView(viewModel: MoreDetailViewModel(coordinator: viewModel.coordinator))
+                }
             }
-        }
-        .task {
-            await viewModel.fetchMovies()
+            .task {
+                if viewModel.movies.isEmpty {
+                    await viewModel.fetchMovies()
+                }
+            }
+
         }
     }
 }
