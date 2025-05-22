@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct AsyncMovieImageView: View {
+struct CustomAsyncMovieImageView: View {
     let urlString: String
     let width: CGFloat
     let height: CGFloat

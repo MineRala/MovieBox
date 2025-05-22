@@ -12,7 +12,7 @@ struct MovieCardView: View {
 
     var body: some View {
         HStack(spacing: 16) {
-            AsyncMovieImageView(urlString: movie.poster, width: 60, height: 90, cornerRadius: 8)
+            CustomAsyncMovieImageView(urlString: movie.poster, width: 60, height: 90, cornerRadius: 8)
             LazyVStack(alignment: .leading) {
                 Text(movie.title)
                     .font(.headline)
