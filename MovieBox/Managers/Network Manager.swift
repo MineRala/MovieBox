@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 // MARK: - NetworkClient Protocol
 protocol NetworkClient {
     func fetch<T: Decodable>(endpoint: Endpoint) async throws -> T
