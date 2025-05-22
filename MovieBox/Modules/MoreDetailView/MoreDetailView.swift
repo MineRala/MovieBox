@@ -20,7 +20,7 @@ struct MoreDetailView<ViewModel: MoreDetailViewModelProtocol>: View {
             Divider()
             rowView(title: AppString.runtime, value: viewModel.runtimeText)
             Divider()
-            rowView(title: AppString.runtime, value: viewModel.actorsText)
+            rowView(title: AppString.actors, value: viewModel.actorsText)
             Divider()
             rowView(title: AppString.director, value: viewModel.directorText)
 
@@ -29,10 +29,12 @@ struct MoreDetailView<ViewModel: MoreDetailViewModelProtocol>: View {
             VStack(spacing: 16) {
                 Button(action: { viewModel.backTapped() }) {
                     Text(AppString.back).frame(maxWidth: .infinity)
+                        .font(.montserrat(.bold, size: 16))
                 }
 
                 Button(action: { viewModel.backToHomeTapped() }) {
                     Text(AppString.navigateToHome).frame(maxWidth: .infinity)
+                        .font(.montserrat(.bold, size: 16))
                 }
             }
         }
@@ -45,12 +47,11 @@ struct MoreDetailView<ViewModel: MoreDetailViewModelProtocol>: View {
     private func rowView(title: String, value: String) -> some View {
         HStack(alignment: .top, spacing: 0) {
             Text(title)
-                .fontWeight(.semibold)
+                .font(.montserrat(.semiBold, size: 16))
                 .fixedSize()
             Spacer(minLength: 4)
             Text(value)
-                .fontWeight(.light)
-                .font(.callout)
+                .font(.montserrat(.light, size: 16))
                 .multilineTextAlignment(.trailing)
                 .lineLimit(nil)
                 .frame(maxWidth: .infinity, alignment: .trailing)

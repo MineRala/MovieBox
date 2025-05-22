@@ -13,11 +13,11 @@ struct MovieCardView: View {
     var body: some View {
         HStack(spacing: 16) {
             CustomAsyncMovieImageView(urlString: movie.poster, width: 60, height: 90, cornerRadius: 8)
-            LazyVStack(alignment: .leading) {
+            LazyVStack(alignment: .leading, spacing: 4) {
                 Text(movie.title)
-                    .font(.headline)
+                    .font(.montserrat(.bold, size: 16))
                 Text(movie.year)
-                    .font(.subheadline)
+                    .font(.montserrat(.regular, size: 16))
                     .foregroundColor(.secondary)
             }
         }

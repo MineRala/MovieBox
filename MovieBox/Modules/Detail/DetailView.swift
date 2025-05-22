@@ -19,7 +19,8 @@ struct DetailView<ViewModel: DetailViewModelProtocol>: View {
             if viewModel.isLoading {
                 ProgressView().padding()
             } else if let error = viewModel.errorMessage {
-                Text("Error: \(error)")
+                Text("\(AppString.error) \(error)")
+                    .font(.montserrat(.regular, size: 16))
                     .foregroundColor(.red)
                     .multilineTextAlignment(.center)
                     .padding()
@@ -30,15 +31,14 @@ struct DetailView<ViewModel: DetailViewModelProtocol>: View {
                     height: 200,
                     cornerRadius: 12
                 )
+                .padding(.top)
                 Text(movieDetail.title)
-                    .font(.title)
-                    .fontWeight(.bold)
+                    .font(.montserrat(.semiBold, size: 22))
                     .multilineTextAlignment(.center)
                 Text(movieDetail.released)
-                    .font(.title3)
-                    .fontWeight(.semibold)
+                    .font(.montserrat(.bold, size: 18))
                 Text(movieDetail.plot)
-                    .font(.body)
+                    .font(.montserrat(.regular, size: 18))
                     .multilineTextAlignment(.center)
                     .padding(.top, 8)
                     .padding(.horizontal, 8)
@@ -46,13 +46,13 @@ struct DetailView<ViewModel: DetailViewModelProtocol>: View {
                 Button {
                     viewModel.moreDetailsTapped()
                 } label: {
-                    Text("More Details")
-                        .bold()
+                    Text(AppString.moreDetails)
+                        .font(.montserrat(.medium, size: 16))
                         .foregroundColor(.blue)
                 }
                 .padding(.top, 8)
             } else {
-                Text("Loading...")
+                Text(AppString.loading)
             }
         }
         .frame(maxHeight: .infinity, alignment: .top)

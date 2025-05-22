@@ -23,8 +23,10 @@ struct HomeView<ViewModel: HomeViewModelProtocol>: View {
             Group {
                 if viewModel.isLoading {
                     ProgressView(AppString.loading)
+                        .font(.montserrat(.regular, size: 16))
                 } else if let error = viewModel.errorMessage {
                     Text("\(AppString.error) \(error)")
+                        .font(.montserrat(.regular, size: 16))
                         .foregroundColor(.red)
                         .multilineTextAlignment(.center)
                         .padding()
@@ -35,6 +37,7 @@ struct HomeView<ViewModel: HomeViewModelProtocol>: View {
                         } label: {
                             MovieCardView(movie: movie)
                         }
+                        .listRowSeparator(.hidden)
                     }
                     .listStyle(.plain)
                 }
