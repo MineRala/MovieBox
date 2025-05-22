@@ -12,7 +12,7 @@ final class HomeViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var errorMessage: String?
 
-    private let networkManager: NetworkClient
+    let networkManager: NetworkClient
 
     init(networkManager: NetworkClient) {
         self.networkManager = networkManager

@@ -18,9 +18,6 @@ final class DetailViewModel: ObservableObject {
     init(imdbID: String, networkManager: NetworkClient) {
         self.imdbID = imdbID
         self.networkManager = networkManager
-        Task {
-            await fetchMovieDetail()
-        }
     }
 
     func fetchMovieDetail() async {
