@@ -22,7 +22,7 @@ ViewModel: Acts as a bridge between the View and Model, handling UI-related logi
 Coordinator: Responsible for handling navigation logic and routing between views, helping to decouple navigation from view and view model logic.
 
 # Features
-- Used Free API
+- Used Free API (OMDB API)
 - Custom Fonts
 
 # Technologies
