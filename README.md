@@ -32,26 +32,6 @@ Coordinator: Responsible for handling navigation logic and routing between views
 - Error Handling
 - Protocol Oriented Programming (POP)
 - Depedency Injection
-  
-# 3rd Party Libraries
-> <a href="https://github.com/SnapKit/SnapKit.git">SnapKit</a>
-
-# Installing SnapKit using Swift Package Manager (SPM)
-To integrate SnapKit into the project using Swift Package Manager, follow these steps:
-Open the project in Xcode.
-From the top menu, go to File -> Add Packages.
-In the search bar, type the following URL to add SnapKit:
-```bash
-(https://github.com/SnapKit/SnapKit)
-```
-Select the version you want to install (the latest version is recommended) and click Add Package.
-Once added, SnapKit will be available for use in the project.
-Now you can import SnapKit in your files where needed:
-```bash
-import SnapKit
-```
-This allows you to start using SnapKit for creating responsive layouts in your project.
-
 
 # UIs
 <img src="https://github.com/user-attachments/assets/9ac1e19c-5fa4-46f8-b4ee-15f13feaa207" width="150">
