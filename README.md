@@ -27,7 +27,7 @@ Coordinator: Responsible for handling navigation logic and routing between views
 - Dark/Light Mode
 
 # Technologies
-- Programmatic UI (SnapKit)
+- SwiftUI
 - MVVM-C
 - Error Handling
 - Protocol Oriented Programming (POP)
