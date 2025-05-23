@@ -31,6 +31,8 @@ Coordinator: Responsible for handling navigation logic and routing between views
 - Error Handling
 - Protocol Oriented Programming (POP)
 - Depedency Injection
+- Generic Network Layer
+- Async/Await
 
 # UIs
 <img src="https://github.com/user-attachments/assets/9ac1e19c-5fa4-46f8-b4ee-15f13feaa207" width="150">
