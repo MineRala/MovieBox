@@ -24,7 +24,6 @@ Coordinator: Responsible for handling navigation logic and routing between views
 # Features
 - Used Free API
 - Custom Fonts
-- Dark/Light Mode
 
 # Technologies
 - SwiftUI
