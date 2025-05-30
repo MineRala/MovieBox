@@ -21,11 +21,11 @@ final class DetailCoordinator: ObservableObject, DetailCoordinatorProtocol {
 
     func navigateToMoreDetail() {
         guard let parent else { return }
-        parent.path.append(.moreDetail)
+        parent.pathAppend(route: .moreDetail)
     }
 
     func updateSelectedMovieDetail(_ detail: MovieDetailModel) {
         guard let parent else { return }
-        parent.selectedMovieDetail = detail
+        parent.setSelectedMovieDetail(model: detail)
     }
 }

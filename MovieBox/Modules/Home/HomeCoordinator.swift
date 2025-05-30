@@ -20,7 +20,7 @@ final class HomeCoordinator: ObservableObject, HomeCoordinatorProtocol {
 
     func navigateToDetail(imdbID: String) {
         guard let parent else { return }
-        parent.selectedMovieDetail = nil
-        parent.path.append(.detail(imdbID: imdbID))
+        parent.setSelectedMovieDetail(model: nil)
+        parent.pathAppend(route: .detail(imdbID: imdbID))
     }
 }

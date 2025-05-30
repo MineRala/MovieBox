@@ -14,8 +14,8 @@ enum MovieRoute: Hashable {
 }
 
 final class MovieCoordinator: ObservableObject {
-    @Published var path: [MovieRoute] = []
-    @Published var selectedMovieDetail: MovieDetailModel?
+    @Published private var path: [MovieRoute] = []
+    @Published private var selectedMovieDetail: MovieDetailModel?
 
     let networkManager: NetworkClient
 
@@ -51,6 +51,24 @@ final class MovieCoordinator: ObservableObject {
     func popToRoot() {
         path.removeAll()
         selectedMovieDetail = nil
+    }
+
+    func pathAppend(route: MovieRoute) {
+        path.append(route)
+    }
+
+    func removePathLast() {
+        if !path.isEmpty {
+            path.removeLast()
+        }
+    }
+
+    func setSelectedMovieDetail(model: MovieDetailModel?) {
+        selectedMovieDetail = model
+    }
+
+    func getSelectedMovieDetail() -> MovieDetailModel? {
+        selectedMovieDetail
     }
 }
 

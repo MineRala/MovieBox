@@ -23,12 +23,12 @@ final class MoreDetailCoordinator: ObservableObject, MoreDetailCoordinatorProtoc
 
     var selectedMovieDetail: MovieDetailModel? {
         guard let parent else { return nil }
-        return parent.selectedMovieDetail
+        return parent.getSelectedMovieDetail()
     }
 
     func back() {
-        guard let parent, !parent.path.isEmpty else { return }
-        parent.path.removeLast()
+        guard let parent else { return }
+        parent.removePathLast()
     }
 
     func backToHome() {
