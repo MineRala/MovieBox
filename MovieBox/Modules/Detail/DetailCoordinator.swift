@@ -25,6 +25,7 @@ final class DetailCoordinator: ObservableObject, DetailCoordinatorProtocol {
     }
 
     func updateSelectedMovieDetail(_ detail: MovieDetailModel) {
-          parent?.selectedMovieDetail = detail
-      }
+        guard let parent else { return }
+        parent.selectedMovieDetail = detail
+    }
 }

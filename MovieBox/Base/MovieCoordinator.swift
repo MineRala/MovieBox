@@ -27,20 +27,36 @@ final class MovieCoordinator: ObservableObject {
         self.networkManager = networkManager
     }
 
-    var pathBinding: Binding<[MovieRoute]> {
+    private var pathBinding: Binding<[MovieRoute]> {
         Binding(get: { self.path }, set: { self.path = $0 })
     }
 
     func start() -> some View {
         let homeVM = HomeViewModel(networkManager: networkManager, coordinator: homeCoordinator)
-        return HomeView<HomeViewModel>(
-            viewModel: homeVM,
-            path: pathBinding,
-            coordinator: self
-        )
+        let homeView = HomeView(viewModel: homeVM)
+
+        return NavigationStack(path: pathBinding) {
+            homeView
+                .navigationDestination(for: MovieRoute.self) { route in
+                    switch route {
+                    case .detail(let imdbID):
+                        self.detailView(for: imdbID)
+                    case .moreDetail:
+                        self.moreDetailView()
+                    }
+                }
+        }
     }
 
-    func detailView(for imdbID: String) -> some View {
+    func popToRoot() {
+        path.removeAll()
+        selectedMovieDetail = nil
+    }
+}
+
+// MARK: - Private
+extension MovieCoordinator {
+    private func detailView(for imdbID: String) -> some View {
         let detailVM = DetailViewModel(
             imdbID: imdbID,
             networkManager: networkManager,
@@ -49,13 +65,8 @@ final class MovieCoordinator: ObservableObject {
         return DetailView(viewModel: detailVM)
     }
 
-    func moreDetailView() -> some View {
+    private func moreDetailView() -> some View {
         let moreDetailVM = MoreDetailViewModel(coordinator: moreDetailCoordinator)
         return MoreDetailView(viewModel: moreDetailVM)
-    }
-
-    func popToRoot() {
-        path.removeAll()
-        selectedMovieDetail = nil
     }
 }
